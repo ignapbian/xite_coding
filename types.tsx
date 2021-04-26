@@ -9,14 +9,31 @@ export type RootStackParamList = {
 };
 
 export type BottomTabParamList = {
-  TabOne: undefined;
-  TabTwo: undefined;
+  Home: undefined;
+  Search: undefined;
 };
 
 export type TabOneParamList = {
-  TabOneScreen: undefined;
+  HomeScreen: undefined;
 };
 
 export type TabTwoParamList = {
-  TabTwoScreen: undefined;
+  SearchScreen: undefined;
 };
+export type song={
+  id:string,
+  artist:string,
+  title:string,
+  release_year:string,
+  genre_id:number,
+  image_url:string
+};
+
+export type genre={
+  id:string,
+  name:string
+};
+ export type Data={
+   genres:genre,
+   videos:song
+ }
