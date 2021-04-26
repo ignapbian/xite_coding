@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Dimensions,Image, FlatList, VirtualizedList } from 'react-native';
+import { StyleSheet, Dimensions,Image, FlatList, VirtualizedList, ScrollView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Text, View } from '../components/Themed';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
@@ -42,7 +42,7 @@ const HomeScreen = () => {
   
   return (
     
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
      {/** slider component*/}
      {loadImage? <>
         <SwiperFlatList
@@ -53,14 +53,18 @@ const HomeScreen = () => {
         showPagination
         data={images.slice(0,10)}
         autoplayLoopKeepAnimation
+        paginationStyle={{
+          position:'absolute',
+          top:200
+        }}
         paginationStyleItem={{
           height:5,
-          width:5
+          width:5,
         }}
         renderItem={({ item }) => (
           <View style={styles.imagesContainer}>
               <Image style={styles.images} source={{uri: item}}/>
-                <AntDesign style={{position:'absolute'}} name="playcircleo" size={50} color="white" />
+                <AntDesign style={{position:'absolute'}} name="infocirlceo" size={50} color="white" />
           </View>
             
         )}
@@ -70,9 +74,10 @@ const HomeScreen = () => {
         <FlatList
           data={data}
         renderItem={(item)=><Category data={item}/>}
+        showsVerticalScrollIndicator={false}
       />
 
-    </View>
+    </ScrollView>
   );
 }
 export default HomeScreen;
