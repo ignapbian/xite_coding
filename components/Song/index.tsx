@@ -7,7 +7,6 @@ export type SongProps={
 }
 
 const Song = (props:SongProps) =>{
-    console.log("song",props)
         return (
             <View style={styles.songContainer}>
                  <Image style={styles.imageSong} source={{uri: props.data.item.image_url}}/>

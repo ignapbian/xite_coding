@@ -14,6 +14,8 @@ import useColorScheme from '../hooks/useColorScheme';
 import SearchScreen from '../screens/SearchScreen';
 import HomeScreen from '../screens/HomeScreen';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
+import VideosScreen from '../screens/VideosScreen';
+import VideoInfoScreen from '../screens/VideoInfoScreen';
  
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -23,11 +25,12 @@ export default function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
+      tabBarOptions={{ activeTintColor: "#FCA311" }}>
       <BottomTab.Screen
         name="Home"
         component={TabOneNavigator}
         options={{
+          
           tabBarIcon: ({ color }) => <FontAwesome name="home" size={24} color={color} />,
         }}
       />
@@ -59,6 +62,16 @@ function TabOneNavigator() {
         name="HomeScreen"
         component={HomeScreen}
         options={{ headerTitle: 'Music Videos' }}
+      />
+      <TabOneStack.Screen
+        name="VideosScreen"
+        component={VideosScreen}
+        options={{ headerTitle: 'More Videos' }}
+      />
+      <TabOneStack.Screen
+        name="VideoInfoScreen"
+        component={VideoInfoScreen}
+        options={{ headerTitle: '' }}
       />
     </TabOneStack.Navigator>
   );

@@ -64,7 +64,7 @@ const HomeScreen = () => {
         renderItem={({ item }) => (
           <View style={styles.imagesContainer}>
               <Image style={styles.images} source={{uri: item}}/>
-                <AntDesign style={{position:'absolute'}} name="infocirlceo" size={50} color="white" />
+                <AntDesign style={{position:'absolute'}} name="infocirlceo" size={50} color="#FCA311" />
           </View>
             
         )}

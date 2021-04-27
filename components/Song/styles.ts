@@ -19,11 +19,11 @@ const styles = StyleSheet.create({
     },
     title:{
         fontSize:16,
-        color:'white'
+        color:'#FFFFFF'
     },
     artist:{
         fontSize:14,
-        color:'grey'
+        color:'#E5E5E5'
     }
 })
 export default styles;
