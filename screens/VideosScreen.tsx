@@ -10,7 +10,6 @@ const VideosScreen = () => {
     const goToInfo = (item:any)=>{
         navigation.navigate('VideoInfoScreen',{data:item})
     }
-    console.log(props.length)
         return (
         <View style={styles.container}>
             {props.length == 0?

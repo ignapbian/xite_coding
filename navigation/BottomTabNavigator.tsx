@@ -87,6 +87,11 @@ function TabTwoNavigator() {
         component={SearchScreen}
         options={{ headerTitle: 'Search Videos' }}
       />
+      <TabOneStack.Screen
+        name="VideoInfoScreen"
+        component={VideoInfoScreen}
+        options={{ headerTitle: '' }}
+      />
     </TabTwoStack.Navigator>
   );
 }

@@ -32,9 +32,6 @@ const HomeScreen = () => {
   }
   useEffect(() => {
       getData();
-      //console.log("genres ",genres )
-      //console.log("videos ",videos )
-     // console.log("dataJson ",dataJson )
   }, [])
   const navigation = useNavigation();
   const goToInfo = (item:any)=>{

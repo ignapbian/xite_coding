@@ -15,7 +15,6 @@ const Category = (props:CategoryProps)=> {
     const goToVideos =()=>{
         navigation.navigate('VideosScreen',{data:props.data.item.videos})
     }
-    console.log(props.data.item.videos.length)
     
         return (
             <TouchableOpacity onPress={goToVideos} style={styles.categoryContainer}>
