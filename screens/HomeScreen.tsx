@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import dataApi from '../services/dataApi';
 import Category from '../components/Category';
 import { Data, song, genre } from '../types';
+import { useNavigation } from '@react-navigation/native';
 
 const HomeScreen = () => {
   const [images, setimages] = useState([]);
@@ -24,11 +25,11 @@ const HomeScreen = () => {
 
   const getData=()=>{
       dataApi.getListData((res)=>{
-        var listImages =[]
+        /*var listImages =[]
         listImages = res.videos.map(function(index: song){
           return index.image_url;
-        })
-        setimages(listImages)
+        })*/
+        setimages(res.videos)
         setloadImage(true);
         listCategories(res);
     },(err)=>{/** error handling */console.log(err)})
@@ -39,6 +40,10 @@ const HomeScreen = () => {
       //console.log("videos ",videos )
      // console.log("dataJson ",dataJson )
   }, [])
+  const navigation = useNavigation();
+  const goToInfo = (item:any)=>{
+      navigation.navigate('VideoInfoScreen',{data:item})
+  }
   
   return (
     
@@ -63,8 +68,8 @@ const HomeScreen = () => {
         }}
         renderItem={({ item }) => (
           <View style={styles.imagesContainer}>
-              <Image style={styles.images} source={{uri: item}}/>
-                <AntDesign style={{position:'absolute'}} name="infocirlceo" size={50} color="#FCA311" />
+              <Image style={styles.images} source={{uri: item.image_url}}/>
+                <AntDesign onPress={()=>{goToInfo(item)}} style={{position:'absolute'}} name="infocirlceo" size={50} color="#FCA311" />
           </View>
             
         )}
