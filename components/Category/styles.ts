@@ -17,6 +17,11 @@ const styles = StyleSheet.create({
         marginRight:20,
         
     },
+    textNoVideos:{
+        fontSize:24,
+        color:'#E5E5E5',
+        fontWeight:'bold',
+    },
     textContainer:{
         flexDirection:'row',
         alignItems:'center',

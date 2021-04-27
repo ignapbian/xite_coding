@@ -10,21 +10,25 @@ const VideosScreen = () => {
     const goToInfo = (item:any)=>{
         navigation.navigate('VideoInfoScreen',{data:item})
     }
+    console.log(props.length)
         return (
         <View style={styles.container}>
-            <FlatList
-                data={props}
-                renderItem={({item})=>(
-                <TouchableOpacity onPress={() =>goToInfo(item)} style={styles.songContainer}>
-                    <Image style={styles.imageSong} source={{uri: item.image_url}}/>
-                    <View style={styles.songTextContainer}>
-                        <Text style={styles.title}>{item.title}</Text>
-                        <Text style={styles.artist}>{item.artist}</Text>
-                    </View>
-                </TouchableOpacity>
-                )}
-
-            />
+            {props.length == 0?
+                <Text style={styles.textNoVideos}>No videos available</Text>
+            :
+                <FlatList
+                    data={props}
+                    renderItem={({item})=>(
+                    <TouchableOpacity onPress={() =>goToInfo(item)} style={styles.songContainer}>
+                        <Image style={styles.imageSong} source={{uri: item.image_url}}/>
+                        <View style={styles.songTextContainer}>
+                            <Text style={styles.title}>{item.title}</Text>
+                            <Text style={styles.artist}>{item.artist}</Text>
+                        </View>
+                    </TouchableOpacity>
+                    )}
+                />
+            }
         </View>
         )
 }
@@ -66,5 +70,10 @@ const styles = StyleSheet.create({
     artist:{
         fontSize:14,
         color:'#E5E5E5'
-    }
+    },
+    textNoVideos:{
+        fontSize:24,
+        color:'#E5E5E5',
+        fontWeight:'bold',
+    },
 });

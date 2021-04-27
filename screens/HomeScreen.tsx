@@ -21,16 +21,12 @@ const HomeScreen = () => {
       array.push({"category_name": res.genres[j].name, "videos": listVideos})
       }
       setData(array);
+      setloadImage(true);
   }
 
   const getData=()=>{
       dataApi.getListData((res)=>{
-        /*var listImages =[]
-        listImages = res.videos.map(function(index: song){
-          return index.image_url;
-        })*/
         setimages(res.videos)
-        setloadImage(true);
         listCategories(res);
     },(err)=>{/** error handling */console.log(err)})
   }
