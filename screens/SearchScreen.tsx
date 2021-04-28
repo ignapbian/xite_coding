@@ -5,22 +5,43 @@ import { useState, useEffect } from 'react';
 import dataApi from '../services/dataApi';
 import { song } from '../types';
 import { useNavigation } from '@react-navigation/native';
+import Select2 from "react-native-select-two";
+import RNPickerSelect from 'react-native-picker-select';
 
 const SearchScreen = () =>{
   const [filterData, setfilterData] = useState([]);
   const [masterData, setmasterData] = useState([]);
   const [genres, setgenres] = useState([]);
-  const [search, setsearch] = useState('')
+  const [search, setsearch] = useState('');
+  const [year, setyear] = useState([]);
+  const [filterYear, setfilterYear] = useState([]);
+  const [filterGenre, setfilterGenre] = useState([]);
+
+  
 
   useEffect(() => {
     getData();
   }, [])
+
+  const onlyUnique=(value, index, self) =>{ 
+    return self.indexOf(value) === index;
+}
+const extractYears = (res)=>{
+    var years = res.videos.map(item=>item.release_year);
+    var unique = years.filter( onlyUnique ).sort(); 
+    var array= [];
+    for (let i = 0; i < unique.length; i++) {
+      array.push({"id":unique[i].toString(),"name":unique[i].toString()})
+    }
+    setyear(array.reverse());
+}
 
   const getData=()=>{
       dataApi.getListData((res)=>{
         setfilterData(res.videos);
         setmasterData(res.videos);
         setgenres(res.genres);
+        extractYears(res);
     },(err)=>{/** error handling */console.log(err)})
   }
   const getGenre = (item)=>{
@@ -47,6 +68,37 @@ const SearchScreen = () =>{
     }
   }
 
+  const selectFilter = (data) =>{
+      
+    console.log("genero",filterGenre);
+    console.log("año", filterYear);
+    if(data.length != 0){
+      const dataFilter = filterData.length == masterData.length ? masterData : filterData;
+      const newData = dataFilter.filter(function(item:song){
+        const itemGenreData = item.genre_id?item.genre_id:'';
+        const itemYearData = item.release_year?item.release_year:'';
+        const selectData = data.map(String);
+        return selectData.includes(itemGenreData.toString()) == true || 
+        selectData.includes(itemYearData.toString()) == true;
+      });
+      setfilterData(newData);
+    }else{
+      setfilterData(masterData);
+    }
+  }
+
+  const selectFilterYear = (data) =>{
+    if(data.length != 0){
+      const newData = masterData.filter(function(item:song){
+        const itemYeatData = item.release_year?item.release_year:'';
+        return data.includes(itemGenreData.toString()) == true;
+      });
+      setfilterData(newData);
+    }else{
+      setfilterData(masterData);
+    }
+  }
+
   const navigation = useNavigation();
     const goToInfo = (item:any)=>{
         navigation.navigate('VideoInfoScreen',{data:item})
@@ -61,7 +113,6 @@ const SearchScreen = () =>{
         <View style={styles.genreYear}>
           <Text style={styles.release}>{item.release_year}</Text>
           <Text style={styles.genre}>{getGenre(item)}</Text>
-          
         </View>
       </TouchableOpacity>
       
@@ -81,12 +132,43 @@ const SearchScreen = () =>{
         placeholderTextColor="#000000"
         underlineColorAndroid='transparent'
         onChangeText={(text) => searchFilter(text)}
-        
       />
       {/** filter genre */}
-
-      {/** filter year */}
-
+      <View style={{ flexDirection:'row' }}>
+        <Select2 
+            style={{ borderRadius: 5,width:'50%' }}
+            colorTheme="#FCA311"
+            popupTitle="Select Genre"
+            title="Select Genre"
+            data={genres}
+            searchPlaceHolderText="Search Genre"
+            selectButtonText="Apply"
+            cancelButtonText="Cancel"
+            onSelect={(dataGenre) => {
+              setfilterGenre(dataGenre);
+              selectFilter(dataGenre);
+            }}
+            onRemoveItem={dataGenre => selectFilter(dataGenre)}
+        />
+        {/** filter year */}
+        <Select2 
+            style={{ borderRadius: 5,width:'50%' }}
+            isSelectSingle
+            colorTheme="#FCA311"
+            popupTitle="Select Year"
+            title="Select Year"
+            data={year}
+            searchPlaceHolderText="Search Year"
+            selectButtonText="Apply"
+            cancelButtonText="Cancel"
+            onSelect={(dataYear) =>{
+              setfilterYear(dataYear);
+              selectFilter(dataYear);
+            }}
+            onRemoveItem={dataYear => selectFilter(dataYear)}
+        />
+      </View>
+      
       {/** results */}
       <FlatList 
         data={filterData}
