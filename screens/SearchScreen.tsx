@@ -14,8 +14,6 @@ const SearchScreen = () =>{
 
   useEffect(() => {
     getData();
-    return () => {
-    }
   }, [])
 
   const getData=()=>{
@@ -32,24 +30,28 @@ const SearchScreen = () =>{
       }
     })
   }
+
+  const searchFilter = (text:string) =>{
+    if(text){
+      const newData = masterData.filter(function(item:song){
+        const itemTitleData = item.title ? item.title.toString().toUpperCase():''.toUpperCase();
+        const itemArtistData = item.artist ? item.artist.toString().toUpperCase():''.toUpperCase();
+        const textData = text.toString().toUpperCase();
+        return itemTitleData.indexOf(textData) > -1 || itemArtistData.indexOf(textData) > -1;
+      });
+      setfilterData(newData);
+      setsearch(text);
+    }else{
+      setfilterData(masterData);
+      setsearch(text);
+    }
+  }
+
   const navigation = useNavigation();
     const goToInfo = (item:any)=>{
         navigation.navigate('VideoInfoScreen',{data:item})
     }
-    const searchFilter = (text:string) =>{
-      if(text){
-        const newData = masterData.filter((item:song)=>{
-          const itemData = item.title ? item.title.toUpperCase():''.toUpperCase();
-          const textData = text.toUpperCase();
-          return itemData.indexOf(textData) > -1;
-        });
-        setfilterData(newData);
-        setsearch(text);
-      }else{
-        setfilterData(masterData);
-        setsearch(text);
-      }
-    }
+    
 
   const ItemView =({item}) =>{
     return(
@@ -75,9 +77,10 @@ const SearchScreen = () =>{
       <TextInput 
         style={styles.textInput}
         value={search}
-        placeholder="Search Here"
+        placeholder="Search Here title or artist"
+        placeholderTextColor="#000000"
         underlineColorAndroid='transparent'
-        onChangeText={((text) => searchFilter(text))}
+        onChangeText={(text) => searchFilter(text)}
         
       />
       {/** filter genre */}
