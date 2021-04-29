@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Dimensions,Image, FlatList, VirtualizedList, ScrollView } from 'react-native';
+import { StyleSheet, Dimensions,Image, FlatList, VirtualizedList, ScrollView, ActivityIndicator } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Text, View } from '../components/Themed';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
@@ -8,6 +8,7 @@ import dataApi from '../services/dataApi';
 import Category from '../components/Category';
 import { Data, song, genre } from '../types';
 import { useNavigation } from '@react-navigation/native';
+import useCachedResources from '../hooks/useCachedResources';
 
 const HomeScreen = () => {
   const [images, setimages] = useState([]);
@@ -17,21 +18,21 @@ const HomeScreen = () => {
   const listCategories=(res:any)=>{
     var array = [];
     for (let j = 0; j < res.genres.length; j++) {
-      var listVideos = res.videos.filter(video=>video.genre_id == res.genres[j].id);
+      var listVideos = res.videos.filter((video: { genre_id: any; })=>video.genre_id == res.genres[j].id);
       array.push({"category_name": res.genres[j].name, "videos": listVideos})
       }
       setData(array);
-      setloadImage(true);
   }
 
   const getData=()=>{
       dataApi.getListData((res)=>{
         setimages(res.videos)
         listCategories(res);
-    },(err)=>{/** error handling */console.log(err)})
+    },(err)=>{/** error handling */console.log("ERROR NETWORK")})
   }
   useEffect(() => {
       getData();
+      setloadImage(true);
   }, [])
   const navigation = useNavigation();
   const goToInfo = (item:any)=>{
@@ -53,11 +54,11 @@ const HomeScreen = () => {
         autoplayLoopKeepAnimation
         paginationStyle={{
           position:'absolute',
-          top:200
+          top:180
         }}
         paginationStyleItem={{
-          height:5,
-          width:5,
+          height:10,
+          width:10,
         }}
         renderItem={({ item }) => (
           <View style={styles.imagesContainer}>
@@ -67,14 +68,15 @@ const HomeScreen = () => {
             
         )}
       />
-      </>
-      : ()=>{}}  
         <FlatList
           data={data}
         renderItem={(item)=><Category data={item}/>}
         showsVerticalScrollIndicator={false}
       />
-
+      </>
+      : <View style={[styles.containerActivity, styles.horizontal]}>
+          <ActivityIndicator size="large" color="#E5E5E5" />
+        </View>}  
     </ScrollView>
   );
 }
@@ -82,8 +84,17 @@ export default HomeScreen;
 
 const deviceWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
-  
+  containerActivity: {
+    flex: 1,
+    justifyContent: "center"
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10
+  },
   container: { 
+    backgroundColor:'#000000',
     
   },
   images: { 

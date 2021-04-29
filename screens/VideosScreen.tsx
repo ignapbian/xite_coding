@@ -17,6 +17,7 @@ const VideosScreen = () => {
             :
                 <FlatList
                     data={props}
+                    numColumns={2}
                     renderItem={({item})=>(
                     <TouchableOpacity onPress={() =>goToInfo(item)} style={styles.songContainer}>
                         <Image style={styles.imageSong} source={{uri: item.image_url}}/>
@@ -37,30 +38,29 @@ const styles = StyleSheet.create({
     container:{
         width:'100%',
         flexDirection:'column',
-        alignContent:'center',
         alignItems:'center',
-        backgroundColor:'#14213D',
+        backgroundColor:'#000000',
+        
     },
     songContainer:{
-        width:300,
+        width:190,
         height:'auto',
         flexWrap: 'wrap',
-        marginLeft:10,
-        borderColor:'#14213D',
+        borderColor:'#000000',
         borderWidth:1,
-        marginBottom:40,
-        marginTop:20
+        marginBottom:10,
+        marginTop:20,
         
     },
     imageSong:{
         width:'100%',
-        height:200,
+        height:100,
     },
     songTextContainer:{
         alignItems:'center',
         flexDirection:'column',
         justifyContent:'center',
-        backgroundColor:'#FCA311',
+        backgroundColor:'#14213D',
     },
     title:{
         fontSize:16,

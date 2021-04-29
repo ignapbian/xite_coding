@@ -2,12 +2,10 @@ import {StyleSheet} from 'react-native'
 
 const styles = StyleSheet.create({
     categoryContainer:{
-        margin:30,
+        margin:10,
         width:'100%',
         height:300,
-        backgroundColor:'#14213D',
         padding:10,
-        borderRadius:10
         
     },
     textCategory:{
@@ -15,7 +13,14 @@ const styles = StyleSheet.create({
         color:'#FCA311',
         fontWeight:'bold',
         marginRight:20,
+        flex:1
         
+    },
+    textShowMore:{
+        fontSize:16,
+        color:'#E5E5E5',
+        fontWeight:'bold',
+        marginRight:20,
     },
     textNoVideos:{
         fontSize:24,

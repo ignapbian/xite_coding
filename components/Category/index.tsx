@@ -13,13 +13,16 @@ export type CategoryProps={
 const Category = (props:CategoryProps)=> {
     const navigation = useNavigation();
     const goToVideos =()=>{
-        navigation.navigate('VideosScreen',{data:props.data.item.videos})
+        navigation.navigate('VideosScreen',{data:props.data.item.videos,title:props.data.item.category_name})
     }
     
         return (
-            <TouchableOpacity onPress={goToVideos} style={styles.categoryContainer}>
+            <View  style={styles.categoryContainer}>
                 <View style={styles.textContainer}>
                     <Text style={styles.textCategory}>{props.data.item.category_name}</Text>
+                    <TouchableOpacity onPress={goToVideos}>
+                        <Text style={styles.textShowMore}> Show more</Text>
+                    </TouchableOpacity>
                 </View>
                 {props.data.item.videos.length == 0?
                     <Text style={styles.textNoVideos}>No videos available</Text>
@@ -31,7 +34,7 @@ const Category = (props:CategoryProps)=> {
                         showsHorizontalScrollIndicator={false}
                     />
                 }
-            </TouchableOpacity>
+            </View>
         )
     }
 export default Category;

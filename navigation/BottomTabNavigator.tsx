@@ -66,7 +66,9 @@ function TabOneNavigator() {
       <TabOneStack.Screen
         name="VideosScreen"
         component={VideosScreen}
-        options={{ headerTitle: 'More Videos' }}
+        options={({route}) => ({
+          title: route.params.title
+        })} 
       />
       <TabOneStack.Screen
         name="VideoInfoScreen"

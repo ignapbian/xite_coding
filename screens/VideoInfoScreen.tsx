@@ -37,7 +37,7 @@ const style = StyleSheet.create({
         justifyContent:'space-between',
         flexDirection:'column',
         alignItems:'center',
-        padding:10
+        padding:10,
         
     },
     title:{

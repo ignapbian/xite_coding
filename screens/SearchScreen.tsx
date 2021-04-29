@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, FlatList,TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, FlatList,TouchableOpacity, TextInput, Button } from 'react-native';
 import { Text, View } from '../components/Themed';
 import { useState, useEffect } from 'react';
 import dataApi from '../services/dataApi';
@@ -68,36 +68,28 @@ const extractYears = (res)=>{
     }
   }
 
-  const selectFilter = (data) =>{
-      
-    console.log("genero",filterGenre);
-    console.log("año", filterYear);
-    if(data.length != 0){
-      const dataFilter = filterData.length == masterData.length ? masterData : filterData;
-      const newData = dataFilter.filter(function(item:song){
-        const itemGenreData = item.genre_id?item.genre_id:'';
-        const itemYearData = item.release_year?item.release_year:'';
-        const selectData = data.map(String);
-        return selectData.includes(itemGenreData.toString()) == true || 
-        selectData.includes(itemYearData.toString()) == true;
-      });
-      setfilterData(newData);
-    }else{
-      setfilterData(masterData);
-    }
+  const selectFilter = () =>{
+      if(filterGenre.length != 0 || filterYear.length != 0){
+        const newData = masterData.filter(function(item:song){
+          const itemGenreData = item.genre_id?item.genre_id:'';
+          const itemYearData = item.release_year?item.release_year:'';
+          const selectFilterGenre = filterGenre.map(String);
+          const selectFilterYear = filterYear.map(String);
+          if(filterGenre.length != 0 && filterYear.length == 0){
+            return selectFilterGenre.includes(itemGenreData.toString()) == true
+          }else if(filterGenre.length == 0 && filterYear.length != 0){
+            return selectFilterYear.includes(itemYearData.toString()) == true
+          }else if (filterGenre.length != 0 && filterYear.length != 0){
+            return selectFilterGenre.includes(itemGenreData.toString()) == true &&
+            selectFilterYear.includes(itemYearData.toString()) == true
+          }
+        });
+        setfilterData(newData);
+      }else{
+        setfilterData(masterData);
+      }
   }
 
-  const selectFilterYear = (data) =>{
-    if(data.length != 0){
-      const newData = masterData.filter(function(item:song){
-        const itemYeatData = item.release_year?item.release_year:'';
-        return data.includes(itemGenreData.toString()) == true;
-      });
-      setfilterData(newData);
-    }else{
-      setfilterData(masterData);
-    }
-  }
 
   const navigation = useNavigation();
     const goToInfo = (item:any)=>{
@@ -128,7 +120,7 @@ const extractYears = (res)=>{
       <TextInput 
         style={styles.textInput}
         value={search}
-        placeholder="Search Here title or artist"
+        placeholder="Search title or artist"
         placeholderTextColor="#000000"
         underlineColorAndroid='transparent'
         onChangeText={(text) => searchFilter(text)}
@@ -136,24 +128,26 @@ const extractYears = (res)=>{
       {/** filter genre */}
       <View style={{ flexDirection:'row' }}>
         <Select2 
-            style={{ borderRadius: 5,width:'50%' }}
+            style={{ borderRadius: 5,width:'50%', backgroundColor:'#FFFFFF',borderColor:'#FCA311' }}
             colorTheme="#FCA311"
             popupTitle="Select Genre"
             title="Select Genre"
             data={genres}
+            selectedTitleStyle={{}}
             searchPlaceHolderText="Search Genre"
             selectButtonText="Apply"
             cancelButtonText="Cancel"
-            onSelect={(dataGenre) => {
+            listEmptyTitle="No results"
+            onSelect={dataGenre => {
               setfilterGenre(dataGenre);
-              selectFilter(dataGenre);
             }}
-            onRemoveItem={dataGenre => selectFilter(dataGenre)}
+            onRemoveItem={data=>{
+              setfilterGenre(data);
+            }}
         />
         {/** filter year */}
         <Select2 
-            style={{ borderRadius: 5,width:'50%' }}
-            isSelectSingle
+            style={{ borderRadius: 5,width:'50%', backgroundColor:'#FFFFFF',borderColor:'#FCA311' }}
             colorTheme="#FCA311"
             popupTitle="Select Year"
             title="Select Year"
@@ -161,19 +155,24 @@ const extractYears = (res)=>{
             searchPlaceHolderText="Search Year"
             selectButtonText="Apply"
             cancelButtonText="Cancel"
-            onSelect={(dataYear) =>{
-              setfilterYear(dataYear);
-              selectFilter(dataYear);
+            listEmptyTitle="No results"
+            onSelect={data =>{
+              setfilterYear(data);
             }}
-            onRemoveItem={dataYear => selectFilter(dataYear)}
+            onRemoveItem={data=>{
+              setfilterYear(data);
+            }}
         />
       </View>
-      
+      <TouchableOpacity style={styles.button} onPress={selectFilter}>
+        <Text style={styles.textButton}>Apply filters</Text>
+      </TouchableOpacity>
       {/** results */}
       <FlatList 
         data={filterData}
         keyExtractor={(item:song) => item.id}
         renderItem={ItemView}
+        style={styles.listSong}
       />
     </View>
   );
@@ -182,16 +181,21 @@ export default SearchScreen;
 const styles = StyleSheet.create({
   container: {
       width:'100%',
-      height:'auto'
+      height:'auto',
+      padding:10
+  },
+  listSong:{
+    marginBottom:150
   },
   songContainer:{
-    borderColor:'#14213D',
     borderWidth:5,
     padding:10,
-    marginBottom:20
+    marginBottom:20,
+    backgroundColor:'#14213D'
   },
   titleArtist:{
-    flexDirection:'row'
+    flexDirection:'row',
+    
   },
   title:{
     fontSize:18,
@@ -203,7 +207,8 @@ const styles = StyleSheet.create({
     color:'#E5E5E5'
   },
   genreYear:{
-    flexDirection:'row'
+    flexDirection:'row',
+    backgroundColor:'#14213D'
   },
   genre:{
     fontSize:18,
@@ -218,9 +223,25 @@ const styles = StyleSheet.create({
     height:50,
     borderWidth:2,
     paddingLeft:20,
-    margin:5,
     borderColor:'#FCA311',
-    backgroundColor:'#FFFFFF'
+    backgroundColor:'#FFFFFF',
+    marginBottom:20
+  },
+  button:{
+    width:'100%',
+    height:40,
+    backgroundColor:'#FCA311',
+    alignContent:'center',
+    alignItems:'center',
+    justifyContent:'center',
+    borderRadius:10,
+    marginBottom:20,
+    marginTop:5
+  },
+  textButton:{
+    color:'white',
+    fontWeight:'bold',
+    fontSize:16
   }
 
 
