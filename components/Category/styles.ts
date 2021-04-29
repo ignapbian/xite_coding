@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
     categoryContainer:{
         margin:10,
         width:'100%',
-        height:300,
+        height:310,
         padding:10,
         
     },
