@@ -11,9 +11,16 @@ import { useNavigation } from '@react-navigation/native';
 import useCachedResources from '../hooks/useCachedResources';
 
 const HomeScreen = () => {
+  /** initialize states */
   const [images, setimages] = useState([]);
   const [data, setData] = useState([]);
   const [loadImage, setloadImage] = useState(false);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    getData();
+    setloadImage(true);
+}, [])
 
   const listCategories=(res:any)=>{
     var array = [];
@@ -25,16 +32,13 @@ const HomeScreen = () => {
   }
 
   const getData=()=>{
+    /** get Data API */
       dataApi.getListData((res)=>{
         setimages(res.videos)
         listCategories(res);
-    },(err)=>{/** error handling */console.log("ERROR NETWORK")})
+    },(err)=>{/** error handling */console.log("Error: ",err)})
   }
-  useEffect(() => {
-      getData();
-      setloadImage(true);
-  }, [])
-  const navigation = useNavigation();
+  
   const goToInfo = (item:any)=>{
       navigation.navigate('VideoInfoScreen',{data:item})
   }

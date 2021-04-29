@@ -5,6 +5,7 @@ import { useRoute } from '@react-navigation/native';
 const VideoInfoScreen = () =>{
     const route = useRoute();
     const props = route.params.data;
+    
     return(
             <View style={style.container}>
                 <Image style={style.imageSong} source={{uri: props.image_url}}/>

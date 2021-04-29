@@ -7,6 +7,7 @@ const VideosScreen = () => {
     const route = useRoute();
     const props = route.params.data;
     const navigation = useNavigation();
+    
     const goToInfo = (item:any)=>{
         navigation.navigate('VideoInfoScreen',{data:item})
     }

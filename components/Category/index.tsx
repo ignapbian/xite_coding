@@ -12,6 +12,7 @@ export type CategoryProps={
 
 const Category = (props:CategoryProps)=> {
     const navigation = useNavigation();
+    
     const goToVideos =()=>{
         navigation.navigate('VideosScreen',{data:props.data.item.videos,title:props.data.item.category_name})
     }

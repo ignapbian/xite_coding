@@ -9,6 +9,7 @@ import Select2 from "react-native-select-two";
 import RNPickerSelect from 'react-native-picker-select';
 
 const SearchScreen = () =>{
+   /** initialize states */
   const [filterData, setfilterData] = useState([]);
   const [masterData, setmasterData] = useState([]);
   const [genres, setgenres] = useState([]);
@@ -16,43 +17,38 @@ const SearchScreen = () =>{
   const [year, setyear] = useState([]);
   const [filterYear, setfilterYear] = useState([]);
   const [filterGenre, setfilterGenre] = useState([]);
-
-  
+  const navigation = useNavigation();
 
   useEffect(() => {
     getData();
   }, [])
 
-  const onlyUnique=(value, index, self) =>{ 
-    return self.indexOf(value) === index;
-}
-const extractYears = (res)=>{
+  const getData=()=>{
+    dataApi.getListData((res)=>{
+      setfilterData(res.videos);
+      setmasterData(res.videos);
+      setgenres(res.genres);
+      extractYears(res);
+    },(err)=>{/** error handling */console.log("Error: ",err)})
+  }
+
+  const extractYears = (res)=>{
+    /** Extract all years and delete the duplicate years */
     var years = res.videos.map(item=>item.release_year);
     var unique = years.filter( onlyUnique ).sort(); 
     var array= [];
-    for (let i = 0; i < unique.length; i++) {
-      array.push({"id":unique[i].toString(),"name":unique[i].toString()})
-    }
-    setyear(array.reverse());
-}
-
-  const getData=()=>{
-      dataApi.getListData((res)=>{
-        setfilterData(res.videos);
-        setmasterData(res.videos);
-        setgenres(res.genres);
-        extractYears(res);
-    },(err)=>{/** error handling */console.log(err)})
-  }
-  const getGenre = (item)=>{
-    return genres.map(function(genre){
-      if(item.genre_id == genre.id){
-        return genre.name;
+      for (let i = 0; i < unique.length; i++) {
+        array.push({"id":unique[i].toString(),"name":unique[i].toString()})
       }
-    })
+      setyear(array.reverse());
+  }
+
+  const onlyUnique=(value, index, self) =>{ 
+    return self.indexOf(value) === index;
   }
 
   const searchFilter = (text:string) =>{
+     /** Function Search title or artist in textInput */
     if(text){
       const newData = masterData.filter(function(item:song){
         const itemTitleData = item.title ? item.title.toString().toUpperCase():''.toUpperCase();
@@ -69,6 +65,7 @@ const extractYears = (res)=>{
   }
 
   const selectFilter = () =>{
+    /** Function select genre or/and year in picker */
       if(filterGenre.length != 0 || filterYear.length != 0){
         const newData = masterData.filter(function(item:song){
           const itemGenreData = item.genre_id?item.genre_id:'';
@@ -89,13 +86,18 @@ const extractYears = (res)=>{
         setfilterData(masterData);
       }
   }
+  
+  const goToInfo = (item:any)=>{
+      navigation.navigate('VideoInfoScreen',{data:item})
+  }
 
-
-  const navigation = useNavigation();
-    const goToInfo = (item:any)=>{
-        navigation.navigate('VideoInfoScreen',{data:item})
-    }
-    
+  const getGenre = (item)=>{
+    return genres.map(function(genre){
+      if(item.genre_id == genre.id){
+        return genre.name;
+      }
+    })
+  }  
 
   const ItemView =({item}) =>{
     return(
@@ -110,8 +112,6 @@ const extractYears = (res)=>{
       
     )
   }
-
-
   
   return (
 

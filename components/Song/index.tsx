@@ -11,6 +11,7 @@ export type SongProps={
 
 const Song = (props:SongProps) =>{
     const navigation = useNavigation();
+    
     const goToInfo = ()=>{
         navigation.navigate('VideoInfoScreen',{data:props.data.item})
     }
